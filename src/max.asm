@@ -18,7 +18,7 @@ section .text
 _start:
     mov rdi, 0                         ;move 0 into dest index
     mov rax, [data_items + rdi * 8]    ;load the first byte
-    mov rbx, rax                       ;as the first item eax is the largest
+    mov rbx, rax;as the first item eax is the largest
 
 start_loop:
     cmp rax, 0                         ;check if we hit the end
