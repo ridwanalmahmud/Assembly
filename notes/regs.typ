@@ -1,0 +1,77 @@
+#set text(
+    font: "Monaspace Radon Frozen",
+    size: 16pt,
+)
+
+#align(center)[
+    #underline(text(fill: blue, weight: "bold", size: 24pt)[Registers])
+]
+=== === General purpose registers ===
+#table(
+    columns: (auto, auto, auto),
+    align: horizon,
+    table.header([*Name*], [*Alias*], [*Description*]),
+    [r0], [rax], [accumulator],
+    [r1], [rbx], [base register],
+    [r2], [rcx], [cycle],
+    [r3], [rdx], [store data in I/O],
+    [r4],
+    [rsp],
+    [stack pointer/stores the address of the topmost element in hardware stack],
+
+    [r5], [rbp], [base ppinter/stack frame's base],
+    [r6], [rsi], [source index],
+    [r7], [rdi], [destination Index],
+    [r8], [], [],
+    [r9...r15], [(no)], [for temporal variables],
+)
+
+=== === Addressing part of registers ===
+- r7b -> lowest byte of r7
+- r3w -> lowest 2 bytes of r3
+
+=== === Alternate names for addressing parts ===
+#table(
+    columns: (auto, auto, auto, auto),
+    align: horizon,
+    table.header([*64bit*], [*32bit*], [*16bit*], [*8bit*]),
+    [rax], [eax], [ax], [ah + al],
+    [rbx], [ebx], [bx], [bh + bl],
+    [rcx], [ecx], [cx], [ch + cl],
+    [rdx], [edx], [dx], [dh + dl],
+    [rsi], [esi], [si], [sil],
+    [rdi], [edi], [di], [dil],
+    [rsp], [esp], [sp], [spl],
+    [rbp], [ebp], [bp], [bpl],
+)
+
+=== === Special registers ===
+- rip -> stores an address of the next instruction to be executed
+- rflags -> stores flags that represents current program's state
+- rflags -- eflags -- flags
+
+=== === Flags in rflags ===
+==== status flags (set by CPU after arithmetic and logical instructions)
+- CF(Carry) -> Bit 0: unsigned arithmetic operation generated a carry (addition) or a borrow (subtraction)
+    - This indicates an overflow for unsigned integers
+- ZF(Zero) -> Bit 6: result of an operation was zero
+- SF(Sign) -> Bit 7: result of an operation is negative (i.e., the most significant bit is set)
+- OF(Overflow) -> Bit 11: signed arithmetic operation overflowed
+- PF(Parity) -> Bit 2: number of set (1) bits in the least significant byte of the result is even and cleared if odd
+- AF(Auxiliary Carry) -> Bit 4: carry occurred from bit 3 to bit 4 (a nibble carry)
+    - this is used for Binary-Coded Decimal (BCD) arithmetic
+
+==== control flags (controls specific CPU operations)
+- DF (Direction Flag) - Bit 10: controls the direction of string operations (MOVS, CMPS, SCAS, etc.)
+    - 0 (Clear): Increment (process strings from low to high addresses)
+    - 1 (Set): Decrement (process strings from high to low addresses)
+    - Instructions: CLD (Clear Direction Flag), STD (Set Direction Flag)
+
+==== system flags (set by the OS)
+- IF (Interrupt Enable Flag) - Bit 9: controls whether the CPU will respond to maskable hardware interrupts
+    - 1 (Set): interrupts are enabled. (Normal operation)
+    - 0 (Clear): interrupts are disabled. (Used in critical sections of code)
+    - Instructions: STI (Set Interrupts), CLI (Clear Interrupts)
+- TF (Trap Flag) - Bit 8: controls single-step mode for debugging
+    - 1 (Set): the CPU generates a debug exception after every instruction, allowing a debugger to take control. This is how breakpoints and step-by-step execution work
+    - 0 (Clear): normal execution
